@@ -118,26 +118,35 @@ class UI:
                         return 'astarEuclidean'
                 if 1450 <= mouse[0] <= 1750 and 350 <= mouse[1] <= 450:
                     self.__grid = FileWorker.read_grid('maze.txt')
-                    self.__pos_right = None
                     self.__pos_left = None
+                    self.__pos_right = None
                     self.__used_algorithm = None
                     self.__algorithm_worked = False
+                    self.__path = None
+                    self.__visited = None
                     self.__algorithm_received = False
                     self.__path_limiter = 0
+                    self.__path_found = True
                 if 1450 <= mouse[0] <= 1750 and 470 <= mouse[1] <= 570:
                     self.__pos_left = None
                     self.__pos_right = None
                     self.__used_algorithm = None
                     self.__algorithm_worked = False
+                    self.__path = None
+                    self.__visited = None
                     self.__algorithm_received = False
                     self.__path_limiter = 0
+                    self.__path_found = True
                 if 1450 <= mouse[0] <= 1750 and 590 <= mouse[1] <= 690:
                     self.__pos_left = None
                     self.__pos_right = None
                     self.__used_algorithm = None
                     self.__algorithm_worked = False
+                    self.__path = None
+                    self.__visited = None
                     self.__algorithm_received = False
                     self.__path_limiter = 0
+                    self.__path_found = True
                     self.__grid = Maze(1, 1, self.__cols, self.__rows).grid
                 if 1450 <= mouse[0] <= 1750 and 710 <= mouse[1] <= 810:
                     FileWorker.write_grid('maze.txt', self.__grid)
