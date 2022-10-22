@@ -4,10 +4,15 @@
 class Graph:
     def __init__(self, maze):
         self.__graph = self.__generate_graph(maze)
+        self.__dead_ends = self.count_dead_ends()
 
     @property
     def graph(self):
         return self.__graph
+
+    @property
+    def dead_ends(self):
+        return self.__dead_ends
 
     def __generate_graph(self, grid):
         tempGraph = {}
@@ -16,6 +21,7 @@ class Graph:
                 if not col:
                     tempGraph[(x, y)] = self.__get_instant_neighbours(grid, x, y)
         return tempGraph
+
 
     @staticmethod
     def reconstruct_path(came_from, start, goal):
@@ -41,3 +47,11 @@ class Graph:
             neighbors.remove((1, (i, j + 1)))
 
         return neighbors
+
+    def count_dead_ends(self):
+        dead_ends = 0
+        for dot in self.__graph:
+            if len(self.__graph[dot]) == 1:
+                dead_ends += 1
+
+        return dead_ends

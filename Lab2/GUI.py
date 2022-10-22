@@ -19,9 +19,13 @@ class UI:
         self.__screen = pygame.display.set_mode((self.__width, self.__height))
         self.__maze_object = Maze(1, 1, self.__cols, self.__rows)
         self.__grid = self.__maze_object.grid
+        self.__dead_ends = None
         self.__pos_left = None
         self.__pos_right = None
         self.__used_algorithm = None
+        self.__algorithm_worked = False
+        self.__path = None
+        self.__visited = None
         self.__algorithm_received = False
         self.__path_limiter = 0
         self.__path_found = True
@@ -117,18 +121,21 @@ class UI:
                     self.__pos_right = None
                     self.__pos_left = None
                     self.__used_algorithm = None
+                    self.__algorithm_worked = False
                     self.__algorithm_received = False
                     self.__path_limiter = 0
                 if 1450 <= mouse[0] <= 1750 and 470 <= mouse[1] <= 570:
                     self.__pos_left = None
                     self.__pos_right = None
                     self.__used_algorithm = None
+                    self.__algorithm_worked = False
                     self.__algorithm_received = False
                     self.__path_limiter = 0
                 if 1450 <= mouse[0] <= 1750 and 590 <= mouse[1] <= 690:
                     self.__pos_left = None
                     self.__pos_right = None
                     self.__used_algorithm = None
+                    self.__algorithm_worked = False
                     self.__algorithm_received = False
                     self.__path_limiter = 0
                     self.__grid = Maze(1, 1, self.__cols, self.__rows).grid
@@ -156,42 +163,46 @@ class UI:
     def __draw_path_and_visited(self):
         start = (self.__pos_left[1] // self.__square_size, self.__pos_left[0] // self.__square_size)
         end = (self.__pos_right[1] // self.__square_size, self.__pos_right[0] // self.__square_size)
-        if self.__used_algorithm == 'BFS':
+        if self.__used_algorithm == 'BFS' and not self.__algorithm_worked:
+            self.__algorithm_worked = True
             search = GraphForBFS(self.__grid)
-            path, visited = search.BFS(start, end)
-            if path == -1:
+            self.__dead_ends = search.dead_ends
+            self.__path, self.__visited = search.BFS(start, end)
+            if self.__path == -1:
                 self.__path_found = False
-                path = None
-                visited = None
+                self.__path = None
+                self.__visited = None
 
-        if self.__used_algorithm == 'astarEuclidean':
+        if self.__used_algorithm == 'astarEuclidean' and not self.__algorithm_worked:
+            self.__algorithm_worked = True
             astarEuclidean = GraphForAStar(self.__grid)
-            path, visited = astarEuclidean.AStarAlgorithm(start, end, GraphForAStar.euclidHeuristic)
-            if path == -1:
+            self.__dead_ends = astarEuclidean.dead_ends
+            self.__path, self.__visited = astarEuclidean.AStarAlgorithm(start, end, GraphForAStar.euclidHeuristic)
+            if self.__path == -1:
                 self.__path_found = False
-                path = None
-                visited = None
+                self.__path = None
+                self.__visited = None
 
         if self.__used_algorithm is not None and self.__path_found:
-            for tile in visited:
+            for tile in self.__visited:
                 pygame.draw.rect(self.__screen, pygame.Color('lemonchiffon'), self.__get_square(tile[1][1], tile[1][0]))
 
             i = self.__path_limiter
-            if i > len(path):
-                self.__path_limiter = len(path)
+            if i > len(self.__path):
+                self.__path_limiter = len(self.__path)
             for line in range(1, i - 1):
                 pygame.draw.circle(self.__screen, pygame.Color('blueviolet'),
-                                   self.__get_circle(path[line][1][1], path[line][1][0])[0],
-                                   self.__get_circle(path[line][1][1], path[line][1][0])[1])
+                                   self.__get_circle(self.__path[line][1][1], self.__path[line][1][0])[0],
+                                   self.__get_circle(self.__path[line][1][1], self.__path[line][1][0])[1])
 
-            if self.__path_limiter < len(path):
-                pygame.draw.rect(self.__screen, pygame.Color('brown3'), self.__get_square(path[i][1][1], path[i][1][0]))
+            if self.__path_limiter < len(self.__path):
+                pygame.draw.rect(self.__screen, pygame.Color('brown3'), self.__get_square(self.__path[i][1][1], self.__path[i][1][0]))
 
             pygame.draw.rect(self.__screen, 'limegreen',
                              self.__get_square_in_decarte(self.__pos_left[0], self.__pos_left[1]))
             pygame.draw.rect(self.__screen, 'brown3',
                              self.__get_square_in_decarte(self.__pos_right[0], self.__pos_right[1]))
-            self.__show_stats(visited, path)
+            self.__show_stats(self.__visited, self.__path)
 
     def __draw_buttons(self):
         self.__create_sign('Оберіть алгоритм:', (1450, 0), 40)
@@ -224,11 +235,12 @@ class UI:
 
     def __show_stats(self, visited, path):
         font = pygame.font.SysFont('Times New Roman', 30)
-        allNodes = f'Загальна кількість вершин: {self.__graph_size()}; '
-        visitedNodes = f'Кількість відвіданих вершин: {len(set(visited))}; '
+
+        visitedNodes = f'Всього станів: {len(set(visited))}; '
+        allNodes = f"Всього станів у пам'яті: {self.__graph_size()}; "
+        deadEndsCount = f'Кількість глухих кутів: {self.__dead_ends} '
         pathLength = f'Довжина шляху: {len(path) - 1}; '
-        coefficient = f'Коефіцієнт ефективності: {(round((len(path) - 1) / len(set(visited)), 3))}'
-        allStats = allNodes + visitedNodes + pathLength + coefficient
+        allStats = visitedNodes + allNodes + deadEndsCount + pathLength
         stats = font.render(allStats, True, 'black')
         self.__screen.blit(stats, (10, 940))
 
@@ -239,3 +251,4 @@ class UI:
                 if tile == 0:
                     size += 1
         return size
+
