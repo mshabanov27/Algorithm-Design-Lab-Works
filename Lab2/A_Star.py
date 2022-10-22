@@ -23,7 +23,6 @@ class GraphForAStar(Graph):
                 return Graph.reconstruct_path(came_from, start, goal), visited
 
             for next_node in list(set(self.graph[current[1]]) - set(visited)):
-                iterations_number += 1
                 new_cost = path_cost[current[1]] + next_node[0]
                 if next_node not in path_cost or (next_node in path_cost and new_cost < path_cost[next_node][1]):
                     path_cost[next_node[1]] = new_cost
