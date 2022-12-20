@@ -7,21 +7,23 @@ class BTree:
     def __init__(self, t=10):
         self.root = BTreeNode(True)
         self.t = t
+        self.counter = 0
 
     def search(self, key, start_node='default'):
         if start_node == 'default':
             start_node = self.root
 
-        data = self.__Sharr_algorithm(key, start_node)
-        if data is not None:
-            return data
+        if not start_node.leaf:
+            for i in range(len(start_node.keys)):
+                self.counter += 1
+                if key < start_node.keys[i]:
+                    return self.search(key, start_node.children[i])
+                elif key == start_node.keys[i]:
+                    return start_node.keys[i]
+            if start_node.children:
+                return self.search(key, start_node.children[-1])
         else:
-            if not start_node.leaf:
-                for i in range(len(start_node.keys)):
-                    if key < start_node.keys[i]:
-                        return self.search(key, start_node.children[i])
-                if start_node.children:
-                    return self.search(key, start_node.children[-1])
+            return self.__Sharr_algorithm(key, start_node)
 
     def insert(self, k):
         root = self.root
@@ -108,7 +110,7 @@ class BTree:
         k = math.floor(math.log(len(node.keys), 2))
         i = 2 ** k
         if node.keys[i - 1] == key:
-            return node, i - 1, node.keys[i - 1]
+            return node.keys[i - 1]
         elif node.keys[i - 1] > key:
             return self.__binary_search(key, node)
         else:
@@ -116,7 +118,8 @@ class BTree:
             i = len(node.keys) + 1 - 2 ** l
             l -= 1
             delta = math.floor(2 ** l)
-            while delta != 0 and 0 < i <= len(node.keys):
+            while 0 < i <= len(node.keys):
+                self.counter += 1
                 if node.keys[int(i) - 1] < key:
                     i = i + (delta // 2 + 1)
                     l -= 1
@@ -126,7 +129,7 @@ class BTree:
                     l -= 1
                     delta = 2 ** l
                 else:
-                    return node, i - 1, node.keys[int(i) - 1]
+                    return node.keys[int(i) - 1]
             return None
 
     def __binary_search(self, key, node):
@@ -135,6 +138,7 @@ class BTree:
         delta = len(temp_list) // 2
         temp_list.append(float('inf'))
         while delta != 0 and 1 <= i <= len(temp_list):
+            self.counter += 1
             if temp_list[i - 1] < key:
                 i = i + (delta // 2 + 1)
                 delta //= 2
@@ -143,7 +147,10 @@ class BTree:
                 delta //= 2
             else:
                 temp_list.remove(float('inf'))
-                return node, i - 1, temp_list[i - 1]
+                return temp_list[i - 1]
+        if temp_list[i - 1] == key:
+            temp_list.remove(float('inf'))
+            return temp_list[i - 1]
         temp_list.remove(float('inf'))
         return None
 

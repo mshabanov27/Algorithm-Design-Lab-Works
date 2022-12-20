@@ -19,8 +19,6 @@ class GUI:
         options_menu = ttk.Notebook()
         options_menu.pack(expand=True, fill=BOTH)
 
-        self.tree = self.__create_tree()
-
         insert = self.create_option(options_menu, "Insert")
         edit = self.create_option(options_menu, "Edit")
         self.search = self.create_option(options_menu, "Search")
@@ -34,6 +32,7 @@ class GUI:
         self.configure_delete(delete)
 
         self.display_tree()
+        self.tree = self.__create_tree()
 
         root.mainloop()
 
@@ -69,6 +68,7 @@ class GUI:
     def read_file(self):
         with open('data.dat', "rb") as file:
             data_from_file = pickle.load(file)
+            file.close()
         return data_from_file
 
     def configure_insert(self, frame):
@@ -132,9 +132,13 @@ class GUI:
         if result is None:
             self.label_search_value.config(text="Value not found.")
             self.label_search_value.place(x=160, y=110)
+            print(self.tree.counter)
+            self.tree.counter = 0
         else:
-            self.label_search_value.config(text=f"Index: {result[2].index}\nValue: {result[2].value}")
+            self.label_search_value.config(text=f"Index: {result.index}\nValue: {result.value}")
             self.label_search_value.place(x=160, y=110)
+            print(self.tree.counter)
+            self.tree.counter = 0
 
     def configure_delete(self, frame):
         label_delete_index = ttk.Label(frame, text="Enter index:", font=('Arial', 13))
