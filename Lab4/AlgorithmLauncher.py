@@ -18,7 +18,7 @@ class AlgorithmLauncher:
             results.append(bee_colony.used_colors)
             plot_values.append(len(AlgorithmLauncher.__get_best_result(results)))
 
-            if i % 20 == 0:
+            if i % 5 == 0:
                 print(results[i])
 
         best_result = AlgorithmLauncher.__get_best_result(results)
