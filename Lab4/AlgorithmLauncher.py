@@ -1,8 +1,6 @@
 import copy
 from Bee_Colony import BeeColony
 from Graph import Graph
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 class AlgorithmLauncher:
@@ -20,17 +18,10 @@ class AlgorithmLauncher:
             results.append(bee_colony.used_colors)
             plot_values.append(len(AlgorithmLauncher.__get_best_result(results)))
 
-            if i % 20 == 0:
-                print(len(AlgorithmLauncher.__get_best_result(results)))
+            print(results[i])
 
         best_result = AlgorithmLauncher.__get_best_result(results)
-        print(f'{best_result}; Chromatic number is {len(best_result)}')
-
-        xpoints = np.array(plot_values)
-        plt.plot(xpoints)
-        plt.ylim([0, 10])
-        plt.show()
-
+        print(f'Used colors: {best_result}; Chromatic number is {len(best_result)}')
 
     @staticmethod
     def __get_best_result(lst):
