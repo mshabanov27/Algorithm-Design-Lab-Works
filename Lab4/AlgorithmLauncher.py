@@ -22,16 +22,11 @@ class AlgorithmLauncher:
         print(f'Used colors: {best_result};\n Chromatic number is {len(best_result)}')
         AlgorithmLauncher.__build_plot(plot_values)
 
-<<<<<<< HEAD
     @staticmethod
     def __launch_bee_colony(bee_colony):
         while bee_colony.available_vertexes:
             best_node = bee_colony.scout_bee_work()
             bee_colony.onlooker_bee_work(best_node)
-=======
-            if i % 20 == 0:
-                print(results[i])
->>>>>>> lab4
 
     @staticmethod
     def __build_plot(plot_values):
