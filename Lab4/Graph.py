@@ -23,7 +23,6 @@ class Graph:
                     index = round(random() * (size - 1))
                 matrix[i][index] = 1
                 matrix[index][i] = 1
-        self.__print_matrix(matrix)
         return matrix
 
     def __set_colours(self):
@@ -32,9 +31,3 @@ class Graph:
             colors[i] = ['NoColour', 1]
         return colors
 
-    @staticmethod
-    def __print_matrix(graph):
-        print('Graph adjacency matrix:')
-        for i in graph:
-            print(i)
-        print()

@@ -8,7 +8,8 @@ class BeeColony:
         self.available_vertexes = [*range(graph_size)]
         self.available_colors = ['red', 'blue', 'green', 'purple', 'yellow', 'pink', 'black',
                                  'white', 'grey', 'brown', 'cyan', 'magenta', 'coral', 'olive',
-                                 'teal', 'lavender', 'lime', 'beige', 'mint', 'maroon', 'silver']
+                                 'teal', 'lavender', 'lime', 'beige', 'mint', 'maroon', 'silver', 'heather',
+                                 'iris', 'plum', 'jam', 'lilac', 'vine', 'grape', 'orchid', 'chiffon']
         self.used_colors = []
 
     def scout_bee_work(self):

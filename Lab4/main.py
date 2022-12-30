@@ -1,3 +1,6 @@
 from AlgorithmLauncher import AlgorithmLauncher
+from InputReceiver import InputReceiver
 
-AlgorithmLauncher.start_bee_colony(200, 20)
+graph_size = InputReceiver.receive_graph_size()
+max_edges = InputReceiver.receive_number_input(graph_size)
+AlgorithmLauncher.start_bee_colony(graph_size, max_edges)
