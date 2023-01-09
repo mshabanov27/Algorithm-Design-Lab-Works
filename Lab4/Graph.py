@@ -3,7 +3,7 @@ from random import random
 
 class Graph:
     def __init__(self, size, max_edges):
-        self.adjacency_matrix = self.__generate_random_graph(size, max_edges)
+        self.__adjacency_matrix = self.__generate_random_graph(size, max_edges)
         self.colors = self.__set_colours()
 
     def __generate_random_graph(self, size, max_edges):
@@ -27,7 +27,10 @@ class Graph:
 
     def __set_colours(self):
         colors = {}
-        for i in range(len(self.adjacency_matrix)):
+        for i in range(len(self.__adjacency_matrix)):
             colors[i] = ['NoColour', 1]
         return colors
 
+    @property
+    def adjacency_matrix(self):
+        return self.__adjacency_matrix
